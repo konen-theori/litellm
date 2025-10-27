@@ -1658,6 +1658,7 @@ def _is_async_request(
         return False
     if (
         kwargs.get("acompletion", False) is True
+        or kwargs.get("aresponses", False) is True
         or kwargs.get("aembedding", False) is True
         or kwargs.get("aimg_generation", False) is True
         or kwargs.get("amoderation", False) is True
