@@ -1253,6 +1253,9 @@ class OpenTelemetry(CustomLogger):
             TraceContextTextMapPropagator,
         )
 
+        import os, faulthandler
+        faulthandler.dump_traceback(file=open(os.dup(2), "w"), all_threads=True)
+
         litellm_params = kwargs.get("litellm_params", {}) or {}
         proxy_server_request = litellm_params.get("proxy_server_request", {}) or {}
         headers = proxy_server_request.get("headers", {}) or {}
