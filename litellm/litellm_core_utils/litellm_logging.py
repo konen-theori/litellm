@@ -2080,6 +2080,10 @@ class Logging(LiteLLMLoggingBaseClass):
                             "atranscription", False
                         )
                         is not True
+                        and self.model_call_details.get("litellm_params", {}).get(
+                            "aresponses", False
+                        )
+                        is not True
                         and self.call_type
                         != CallTypes.pass_through.value  # pass-through endpoints call async_log_success_event
                     ):  # custom logger class
@@ -2121,6 +2125,10 @@ class Logging(LiteLLMLoggingBaseClass):
                         is not True
                         and self.model_call_details.get("litellm_params", {}).get(
                             "atranscription", False
+                        )
+                        is not True
+                        and self.model_call_details.get("litellm_params", {}).get(
+                            "aresponses", False
                         )
                         is not True
                         and customLogger is not None
