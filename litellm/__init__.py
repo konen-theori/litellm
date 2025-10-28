@@ -110,7 +110,56 @@ if set_verbose == True:
 ### Callbacks /Logging / Success / Failure Handlers #####
 CALLBACK_TYPES = Union[str, Callable, CustomLogger]
 input_callback: List[CALLBACK_TYPES] = []
+class ObservableList(list):
+    def __init__(self, *args, on_change=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._on_change = on_change
+
+    def _trigger(self):
+        if callable(self._on_change):
+            self._on_change(self)
+
+    # Override mutation methods
+    def append(self, item):
+        super().append(item)
+        self._trigger()
+
+    def extend(self, items):
+        super().extend(items)
+        self._trigger()
+
+    def insert(self, index, item):
+        super().insert(index, item)
+        self._trigger()
+
+    def remove(self, item):
+        super().remove(item)
+        self._trigger()
+
+    def pop(self, index=-1):
+        val = super().pop(index)
+        self._trigger()
+        return val
+
+    def clear(self):
+        super().clear()
+        self._trigger()
+
+    def __setitem__(self, index, value):
+        super().__setitem__(index, value)
+        self._trigger()
+
+    def __delitem__(self, index):
+        super().__delitem__(index)
+        self._trigger()
+
+def on_mod(new_value):
+    verbose_logger.debug(f"konen: {new_value=}")
+    import faulthandler
+    faulthandler.dump_traceback(all_threads=True)
+
 success_callback: List[CALLBACK_TYPES] = []
+success_callback = ObservableList(success_callback, on_change=on_mod)
 failure_callback: List[CALLBACK_TYPES] = []
 service_callback: List[CALLBACK_TYPES] = []
 logging_callback_manager = LoggingCallbackManager()
