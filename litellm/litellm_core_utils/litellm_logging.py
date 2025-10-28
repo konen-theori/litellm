@@ -2875,7 +2875,9 @@ class Logging(LiteLLMLoggingBaseClass):
         Why: Some callbacks - `langfuse`, `s3` are sync callbacks. We need to call them in the executor.
         """
         if self._should_run_sync_callbacks_for_async_calls() is False:
+            verbose_logger.debug("konen: _should_run_sync_callbacks_for_async_calls is False")
             return
+        verbose_logger.debug("konen: _should_run_sync_callbacks_for_async_calls is True")
 
         executor.submit(
             self.success_handler,
@@ -2894,6 +2896,8 @@ class Logging(LiteLLMLoggingBaseClass):
             dynamic_success_callbacks=self.dynamic_success_callbacks,
             global_callbacks=litellm.success_callback,
         )
+        verbose_logger.debug(f"konen: {self.dynamic_success_callbacks=}")
+        verbose_logger.debug(f"konen: {litellm.success_callback=}")
         _filtered_success_callbacks = self._remove_internal_custom_logger_callbacks(
             _combined_sync_callbacks
         )
@@ -2972,6 +2976,7 @@ class Logging(LiteLLMLoggingBaseClass):
             ):
                 continue
             _new_callbacks.append(_c)
+        verbose_logger.debug(f"konen: {_new_callbacks=}")
         return _new_callbacks
 
     def _get_assembled_streaming_response(
